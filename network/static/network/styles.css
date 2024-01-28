@@ -1,1 +1,19 @@
-/* grid OR flex OR bootstrap classes */
+/* grid OR flex OR bootstrap classes
+
+body {
+  display: grid;
+  grid-template-rows: 2fr 50fr 1fr;
+}
+
+.card-header {
+    max-height: 15%;
+  }
+  
+  .card-body {
+    max-height: 60%;
+  }
+  
+  .card-footer {
+    max-height: 15%;
+  }
+   */
