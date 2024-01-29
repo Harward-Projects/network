@@ -13,14 +13,17 @@
         <div class="d-flex flex-column" style="height: 79vh; overflow-y: auto;">
         
           <!-- New Post Card -->
-          <div class="card text-center mb-3">
-            <div class="card-header">
+          <div class="card d-flex mb-3">
+            <div class="card-header text-center">
               New Post
             </div>
             <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">Post</a>
+              <form>
+                <div class="form-group">
+                  <textarea class="form-control mb-1" name="newPostText" placeholder="Write your toughts here!"></textarea>
+                  <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
+                </div>
+              </form>
             </div>
           </div>
           <!-- New Post Card -->
