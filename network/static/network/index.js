@@ -1,3 +1,6 @@
+document.addEventListener('DOMContentLoaded', function () {
+  // Use links to toggle between views
+});
 const submitPostButton = document.getElementById('submitPost');
 
 submitPostButton.addEventListener('click', (event) => {

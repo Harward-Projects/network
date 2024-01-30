@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User
@@ -11,8 +11,14 @@ def index(request):
     return render(request, "network/index.html")
 
 
-def allPosts(request):
-    return render(request, "network/allPosts.html")
+def profile_view(request, user):
+    return render(
+        request,
+        "network/profile.html",
+        {
+            "user": user,
+        },
+    )
 
 
 def login_view(request):

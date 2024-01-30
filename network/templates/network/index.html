@@ -1,21 +1,128 @@
 {% extends "network/layout.html" %}
-{% load static %}
 
 {% block body %}
-    TODO
-    <br><br><br><br><br>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. <br><br><br><br><br><br>
-    Sed corrupti eligendi repellendus nobis ipsa error impedit, distinctio velit. <br><br><br><br><br>Odio harum numquam quam ducimus, ea doloribus fugiat ex deleniti vitae? Necessitatibus?<br><br><br><br><br><br>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, reprehenderit minima non qui nulla adipisci nostrum voluptas voluptates. Vero perferendis aperiam quis! Cum, cupiditate itaque optio velit asperiores unde veniam?
-    <br><br><br><br><br><br>
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-     In a odit ducimus amet quos, officia molestiae sit veniam voluptatum temporibus, obcaecati accusamus facilis fugiat, ad corrupti dignissimos aliquid provident repudiandae!
-    <br><br><br><br><br><br>
-    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-     Hic cupiditate et deleniti tempora explicabo. Dicta error maiores ea provident quisquam ipsa voluptate nulla, obcaecati quibusdam facilis dolore exercitationem?
-      Iste, assumenda.
-{% endblock %}
+  <div class="card text-center mb-3">
+    <div class="card-header">
+      All Posts
+    </div>
+  </div>
 
-{% block script %}
-    <script src="{% static 'network/inbox.js' %}"></script>
+  <div class="container-fluid">
+    <div class="row h-100">
+      <div class="col-12">
+        <div class="d-flex flex-column" style="height: 79vh; overflow-y: auto;">
+        
+          <!-- New Post Card -->
+          <div class="card d-flex mb-3">
+            <div class="card-header text-center">
+              New Post
+            </div>
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <textarea class="form-control mb-1" name="newPostText" placeholder="Write your toughts here!"></textarea>
+                  <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- New Post Card's End -->
+
+        
+          <!-- Existing Posts -->
+          <div class="card mb-3">
+            <div class="card-body">
+        
+              <p> ♥ <br>
+                            3allPosts:339 Like button clicked. Post number: 18
+                  allPosts:357 Uncaught TypeError: Cannot read properties of null (reading 'innerHTML')
+                      at like (allPosts:357:52)
+                      at button.onclick (allPosts:347:22)
+                  like/undefined:1 
+                          
+                          
+                        Failed to load resource: the server responded with a status of 404 (Not Found)
+                  allPosts:339 Like button clicked. Post number: 18
+                  allPosts:357 Uncaught TypeError: Cannot read properties of null (reading 'innerHTML')
+                      at like (allPosts:357:52)
+                      at button.onclick (allPosts:347:22)
+                  like/undefined:1 
+                          
+                          
+                        Failed to load resource: the server responded with a status of 404 (Not Found)
+                  3allPosts:339 Like button clicked. Post number: 18
+                  2allPosts:304 Edit button clicked. Post number: 19
+                  allPosts:329 Edited text: lorem ipsum
+        
+        
+        
+                  sdfdf
+        
+        
+        
+                  ds;fjsd
+        
+        
+        
+                  serpwaouixzvc
+                  dsdf
+        
+        
+                  asdfasdf
+                  df
+                  sda
+                  f
+                  asd
+                  f
+                  as
+                  df
+                  as
+                  dfsadf
+                  asf
+                  f
+        
+                  df
+              </p>
+              <hr>
+              <br><br><br><br><br>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. <br><br><br><br><br><br>
+              Sed corrupti eligendi repellendus nobis ipsa error impedit, distinctio velit. <br><br><br><br><br>Odio harum numquam quam ducimus, ea doloribus fugiat ex deleniti vitae? Necessitatibus?<br><br><br><br><br><br>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, reprehenderit minima non qui nulla adipisci nostrum voluptas voluptates. Vero perferendis aperiam quis! Cum, cupiditate itaque optio velit asperiores unde veniam?
+              <br><br><br><br><br><br>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              In a odit ducimus amet quos, officia molestiae sit veniam voluptatum temporibus, obcaecati accusamus facilis fugiat, ad corrupti dignissimos aliquid provident repudiandae!
+              <br><br><br><br><br><br>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              Hic cupiditate et deleniti tempora explicabo. Dicta error maiores ea provident quisquam ipsa voluptate nulla, obcaecati quibusdam facilis dolore exercitationem?
+                Iste, assumenda.
+            </div>
+          </div>
+          <!-- Existing Posts' End -->
+        
+          <!-- Pages Navigation by Pagination -->
+          <div class="card-footer text-body-secondary fixed-bottom text-center">
+            Pages
+            <!-- Pagination from: https://getbootstrap.com/docs/5.3/components/pagination -->
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                  <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">2</span>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- Pages Navigation by Pagination's End -->
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

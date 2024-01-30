@@ -20,15 +20,15 @@
       <div>
         <ul class="navbar-nav mr-auto nav-underline">
           {% if user.is_authenticated %}
-              <li class="nav-item">
-                  <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+              <li class="nav-item" id="itemUser">
+                  <a class="nav-link" href="{% url 'profile' user=user.username %}"><strong>{{ user.username }}</strong></a>
               </li>
           {% endif %}
-          <li class="nav-item">
+          <li class="nav-item" id="itemAllPosts">
             <a class="nav-link" href="{% url 'index' %}">All Posts</a>
           </li>
           {% if user.is_authenticated %}
-              <li class="nav-item">
+              <li class="nav-item" id="itemFollowing">
                   <a class="nav-link" href="#">Following</a>
               </li>
               <li class="nav-item">

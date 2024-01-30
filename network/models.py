@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import datetime
+
+# from datetime import datetime
+# from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -9,8 +11,8 @@ class User(AbstractUser):
 
 # If a user is followed by another ones, it means that those users are following this user.
 class FollowState(models.Model):
-    user: models.ForeignKey(User, on_delete=models.CASCADE, related_name="the_user")
-    followed_by: models.ManyToManyField(User, blank=True, related_name="followed_by")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="the_user")
+    followed_by = models.ManyToManyField(User, blank=True, related_name="followed_by")
 
     def __str__(self):
         return f"{self.user} is followed BY {self.followed_by}."
@@ -18,10 +20,12 @@ class FollowState(models.Model):
 
 # A post has just one author and multiple likes from different users, if any. So, M2M field and blank:True
 class Post(models.Model):
-    author: models.ForeignKey(User, on_delete=models.CASCADE)
-    content: models.TextField(blank=False)  # Charfield(max_lenght=255)
-    likes: models.ManyToManyField(User, blank=True, related_name="likes")
-    creation_date: models.DateTimeField(default=datetime.now())  # auto_now_add=True
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(
+        blank=False, default="Empty"
+    )  # Charfield(max_lenght=255)
+    likes = models.ManyToManyField(User, blank=True, related_name="likes")
+    creation_date = models.DateTimeField(auto_now_add=True)  # auto_now_add=True
 
     def __str__(self):
         return f"{self.author} posted a post."
