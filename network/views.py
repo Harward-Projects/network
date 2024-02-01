@@ -4,11 +4,40 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
+from .forms import PostForm
 
 
 def index(request):
-    return render(request, "network/index.html")
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)  # Don't save to DB
+            post.author = request.user
+            post.save()  # Now save to DB
+            form = PostForm()
+            # return render(
+            #     request,
+            #     "network/index.html",
+            #     {
+            #         "form": form,
+            #     },
+            # )
+        else:
+            form = PostForm()
+    else:
+        form = PostForm()
+
+    posts = Post.objects.all()
+
+    return render(
+        request,
+        "network/index.html",
+        {
+            "form": form,
+            "posts": posts,
+        },
+    )
 
 
 def profile_view(request, user):
@@ -16,7 +45,7 @@ def profile_view(request, user):
         request,
         "network/profile.html",
         {
-            "user": user,
+            "theuser": user,
         },
     )
 

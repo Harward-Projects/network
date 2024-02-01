@@ -18,11 +18,18 @@
               New Post
             </div>
             <div class="card-body">
-              <form>
-                <div class="form-group">
-                  <textarea class="form-control mb-1" name="newPostText" placeholder="Write your toughts here!"></textarea>
-                  <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
-                </div>
+              <form class="form-group" action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                {{ form.content }}
+                <!-- Alternative way to create desired textarea via HTML directly instead of the above prefered form.content -->
+                <!-- if block, as the value,should be employed without any extra character to maintian placeholder's effect -->
+                    <!-- <textarea  -->
+                    <!-- class="form-control mb-1"  -->
+                    <!-- id="{{ form.content.id_for_label }}"  -->
+                    <!-- name="{{ form.content.html_name }}"  -->
+                    <!-- placeholder="Write your thoughts here!">{% if form.content.value %}{{ form.content.value }}{% endif %}</textarea> -->
+                <!-- Alternative way to create desired textarea via HTML directly's End -->
+                <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
               </form>
             </div>
           </div>
@@ -34,6 +41,23 @@
             <div class="card-body">
         
               <p> ♥ <br>
+              {% for post in posts  %}
+                <div class="card d-flex mb-3">
+                  <div class="card-body">
+                    <a href="{% url 'profile' user=user.username %}" class="card-title">post.user</a>
+                    <a href="{% url 'profile' user=user.username %}" class="card-link">Edit</a>
+                    <p class="">
+                      post.content
+                    </p>
+                    <span class="" style="color: #818a91;">
+                      post.creation_date
+                    </span>
+                    <a href="#" class="" style="color: red; font-size: 2rem; text-decoration: none;">♥</a><span class="">0</span>
+                  </div>
+                </div>
+              {% empty %}
+                  <h5 class="text-center">No posts yet!<br>Be the first that starts the conversation.</h5>
+              {% endfor %}
                             3allPosts:339 Like button clicked. Post number: 18
                   allPosts:357 Uncaught TypeError: Cannot read properties of null (reading 'innerHTML')
                       at like (allPosts:357:52)

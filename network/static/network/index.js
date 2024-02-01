@@ -1,10 +1,12 @@
-document.addEventListener('DOMContentLoaded', function () {
-  // Use links to toggle between views
-});
-const submitPostButton = document.getElementById('submitPost');
+// document.addEventListener('DOMContentLoaded', function () {
+//   // Use links to toggle between views
+// });
+// const submitPostButton = document.getElementById('submitPost');
 
-submitPostButton.addEventListener('click', (event) => {
-  event.preventDefault(); // Prevent the default submit action
+// submitPostButton.addEventListener('click', (event) => {
+//   event.preventDefault(); // Prevent the default submit action
 
-  // Perform any custom logic here, such as validation or custom form submission
-});
+//   // Perform any custom logic here, such as validation or custom form submission
+// });
+
+// const function post

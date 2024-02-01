@@ -9,7 +9,7 @@ from .models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ["content", "creation_date"]
+    list_display = ["author", "content", "creation_date"]
 
 
 # if wanting to show M2M's related fields or properties of M2M's related fields in the list_display attribute. For ManyToMany fields, you can display related fields using a method on the admin model class.
