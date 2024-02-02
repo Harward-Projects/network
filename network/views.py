@@ -16,19 +16,15 @@ def index(request):
             post.author = request.user
             post.save()  # Now save to DB
             form = PostForm()
-            # return render(
-            #     request,
-            #     "network/index.html",
-            #     {
-            #         "form": form,
-            #     },
-            # )
+            # Redirect to the index page after form submission to prevent re-submission in refreshing page
+            return redirect("index")
         else:
             form = PostForm()
     else:
         form = PostForm()
 
-    posts = Post.objects.all()
+    # Order posts in reversed order based on creation_date
+    posts = Post.objects.all().order_by("-creation_date")
 
     return render(
         request,
