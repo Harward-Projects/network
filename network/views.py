@@ -8,6 +8,13 @@ from .models import User, Post
 from .forms import PostForm
 
 
+def edit_post(request, post_id):
+    if request.method == "POST":
+
+        return None
+    # return redirect("index")
+
+
 def index(request):
     if request.method == "POST":
         form = PostForm(request.POST)

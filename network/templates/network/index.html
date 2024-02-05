@@ -10,26 +10,28 @@
   <div class="" style="height: 79vh; overflow-y: auto;">
   
     <!-- New Post Card -->
-    <div class="container card d-flex mb-3 col-7">
-      <div class="card-header text-center">
-        New Post
+    {% if user.is_authenticated %}
+      <div class="container card d-flex mb-3 col-7">
+        <div class="card-header text-center">
+          New Post
+        </div>
+        <div class="card-body">
+          <form class="form-group" action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            {{ form.content }}
+            <!-- Alternative way to create desired textarea via HTML directly instead of the above prefered form.content -->
+            <!-- if block, as the value,should be employed without any extra character to maintian placeholder's effect -->
+                <!-- <textarea  -->
+                <!-- class="form-control mb-1"  -->
+                <!-- id="{{ form.content.id_for_label }}"  -->
+                <!-- name="{{ form.content.html_name }}"  -->
+                <!-- placeholder="Write your thoughts here!">{% if form.content.value %}{{ form.content.value }}{% endif %}</textarea> -->
+            <!-- Alternative way to create desired textarea via HTML directly's End -->
+            <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
+          </form>
+        </div>
       </div>
-      <div class="card-body">
-        <form class="form-group" action="{% url 'index' %}" method="post">
-          {% csrf_token %}
-          {{ form.content }}
-          <!-- Alternative way to create desired textarea via HTML directly instead of the above prefered form.content -->
-          <!-- if block, as the value,should be employed without any extra character to maintian placeholder's effect -->
-              <!-- <textarea  -->
-              <!-- class="form-control mb-1"  -->
-              <!-- id="{{ form.content.id_for_label }}"  -->
-              <!-- name="{{ form.content.html_name }}"  -->
-              <!-- placeholder="Write your thoughts here!">{% if form.content.value %}{{ form.content.value }}{% endif %}</textarea> -->
-          <!-- Alternative way to create desired textarea via HTML directly's End -->
-          <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
-        </form>
-      </div>
-    </div>
+    {% endif %}
     <!-- New Post Card's End -->
 
   
@@ -41,15 +43,21 @@
           <div class="card d-flex mb-3">
             <div class="card-body">
               <a href="{% url 'profile' user=post.author %}" class="text-decoration-none link-success">{{ post.author }}</a><br>
-              <a href="{% url 'profile' user=user.username %}" class="card-link">Edit</a>
+              {% if user.is_authenticated and user.username == post.author.username %}
+                <button id="editPost_{{ post.id }}" class="card-link">Edit</button>
+              {% endif %}
               <p class="mt-2 mb-2">
                 {{ post.content }}
               </p>
               <span class="" style="color: #818a91;">
                 {{ post.creation_date|date:"D, d M Y H:i:s" }}
               </span><br>
-              <span id="likeIconForPost{{ post.id }}" class="" style="color: red; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
-              <span id="likeCountForPost{{ post.id }}">0</span>
+              {% if post.like_count == 0 %}
+                <span id="likeIconForPost_{{ post.id }}" class="" style="color: #818a91; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
+              {% else %}
+                <span id="likeIconForPost_{{ post.id }}" class="" style="color: red; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
+              {% endif %}
+              <span id="likeCountForPost_{{ post.id }}">{{ post.like_count }}</span>
             </div>
           </div>
         {% empty %}
