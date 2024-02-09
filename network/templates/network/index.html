@@ -15,7 +15,7 @@
         <div class="card-header text-center">
           New Post
         </div>
-        <div class="card-body">
+        <div id="newPostId" class="card-body">
           <form class="form-group" action="{% url 'index' %}" method="post">
             {% csrf_token %}
             {{ form.content }}
@@ -52,10 +52,10 @@
               <span class="" style="color: #818a91;">
                 {{ post.creation_date|date:"D, d M Y H:i:s" }}
               </span><br>
-              {% if post.like_count == 0 %}
-                <span id="likeIconForPost_{{ post.id }}" class="" style="color: #818a91; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
-              {% else %}
+              {% if user in post.likes.all %}
                 <span id="likeIconForPost_{{ post.id }}" class="" style="color: red; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
+              {% else %}
+                <span id="likeIconForPost_{{ post.id }}" class="" style="color: #818a91; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
               {% endif %}
               <span id="likeCountForPost_{{ post.id }}">{{ post.like_count }}</span>
             </div>

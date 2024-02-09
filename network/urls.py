@@ -9,5 +9,6 @@ urlpatterns = [
     path("register", views.register, name="register"),
     # network(Poster) API routes
     path("profile/<str:user>", views.profile_view, name="profile"),
-    path("post/<int:post_id>", views.edit_post, name="edit_post"),
+    path("post/<int:post_id>/edit/", views.edit_post, name="edit_post"),
+    path("post/<int:post_id>/like/", views.like_unlike_post, name="like_unlike_post"),
 ]

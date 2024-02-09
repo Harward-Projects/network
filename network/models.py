@@ -20,8 +20,10 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=False)  # Charfield(max_lenght=255)
     likes = models.ManyToManyField(User, blank=True, related_name="likes")
-    like_count = models.PositiveSmallIntegerField(default=0)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.author} posted a post."
+
+    def like_count(self):
+        return self.likes.count()

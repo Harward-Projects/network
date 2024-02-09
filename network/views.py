@@ -1,18 +1,54 @@
+import json
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from .models import User, Post
 from .forms import PostForm
 
 
+@csrf_exempt
+@login_required
 def edit_post(request, post_id):
     if request.method == "POST":
-
-        return None
+        data = json.loads(request.body)
+        print(f"POST data:", data.liked)
+        return JsonResponse({"message": "Post updated successfully."}, status=200)
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=400)
     # return redirect("index")
+
+
+@login_required
+def like_unlike_post(request, post_id):
+    user = request.user
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        liked_state = data.get("liked")
+        if (
+            user in post.likes.all() and not liked_state
+        ):  # double check if post was liked
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+        post.save()
+        print(f"PUT data:", data)
+        print(f"liked:", data.get("liked"))
+
+        return JsonResponse(
+            {
+                "message": "Post like/unlike state updated successfully.",
+                "like_count": post.like_count(),
+            },
+            status=200,
+        )
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 def index(request):
