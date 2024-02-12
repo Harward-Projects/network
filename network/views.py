@@ -15,8 +15,13 @@ from .forms import PostForm
 @login_required
 def edit_post(request, post_id):
     if request.method == "POST":
+        post = get_object_or_404(Post, pk=post_id)
         data = json.loads(request.body)
-        print(f"POST data:", data.liked)
+        new_content = data.get("new_post_content")
+        print(f"Edit Button:", new_content)
+        post.content = new_content
+        post.save()
+
         return JsonResponse({"message": "Post updated successfully."}, status=200)
     else:
         return JsonResponse({"error": "Invalid request method."}, status=400)

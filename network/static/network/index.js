@@ -2,51 +2,138 @@
 //   // Use links to toggle between views
 // });
 
-// This section grabs visible editPost_id's buttons and performs edit by means of fetch method (POST) and Django edit_post function
-// The url get path for edit_post function most be considered for security and/or clean code to be unreachable
-const editPostButton = document.querySelectorAll('[id^="editPost_"]');
-editPostButton.forEach((button) => {
-  button.addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent the default button action
+// Function: Create the button element
+const buttonCreator = function (buttonName, postId) {
+  const button = document.createElement('button');
+  button.id = `${buttonName}ButtonPost_${postId}`;
+  // Capitalize the buttonName
+  const buttonNameCapitalized =
+    buttonName.charAt(0).toUpperCase() + buttonName.slice(1);
+  button.textContent = buttonNameCapitalized;
+  button.className = 'card-link';
+  return button;
+};
 
-    const buttonId = button.id; // Get the button's id ("editPost_<post.id>")
-    const postId = buttonId.split('_')[1]; // Split the id string and get the second part (post.id)
-    console.log('Button clicked', buttonId);
-    console.log('Post ID:', postId);
+// Function: Create the textContainer element, either 'p' or 'textarea'
+const textContainerCreator = function (type, content, postId) {
+  const textContainer = document.createElement(type);
+  if (type == 'p') {
+    textContainer.textContent = content; // Use textContent for paragraphs
+    textContainer.id = `postContentParagraph_${postId}`;
+    textContainer.className = 'mt-2 mb-2';
+  } else {
+    textContainer.id = `postContentTextarea_${postId}`;
+    textContainer.className = 'form-control mb-1';
+    textContainer.rows = 3;
+    textContainer.value = content; // Set value property for textarea
+  }
+  return textContainer;
+};
 
-    const csrftoken = document.querySelector(
-      '[name=csrfmiddlewaretoken]'
-    ).value;
-    fetch(`/post/${postId}/edit/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken,
-      },
-      body: JSON.stringify({
-        // Any data you need to send to the server...
-      }),
+// Function: Substitute the old element by new element
+const elementSubstitutor = function (oldElement, newElement) {
+  oldElement.parentNode.replaceChild(newElement, oldElement);
+};
+
+// Function: Update the post content in the database
+const postUpdaterInDataBase = function (newPostContent, postId) {
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  fetch(`/post/${postId}/edit/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+    },
+    body: JSON.stringify({
+      new_post_content: newPostContent,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to update the post.');
+      }
+      // Handle successful response...
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to update the post.');
-        }
-        // Handle successful response...
-      })
-      .catch((error) => {
-        console.error('Error updating the post:', error);
-      });
-  });
-});
+    .catch((error) => {
+      console.error('Error updating the post:', error);
+    });
+};
 
-// This section grabs visible likeIcon_id's spans and performs front and back manipulation for
-// like/unlike by means of fetch method (PUT) and Django like_unlike_post function
-const likeIconForPost = document.querySelectorAll('[id^="likeIconForPost_"]');
-likeIconForPost.forEach((likeIcon) => {
-  // likeIcon.addEventListener('click', (event) => {
-  // event.preventDefault(); // Prevent the default icon action
-  // Toggles between Red and Gray just in front
-  likeIcon.addEventListener('click', () => {
+// This section grabs visible editButtonPost_id's buttons and performs edit by means of fetch method (POST) and Django edit_post function
+// The url get path for edit_post function must be considered for security and/or clean code to be unreachable
+document.addEventListener('click', (event) => {
+  let eventId, postId;
+  eventId = event.target.id;
+  postId = eventId.split('_')[1]; // Split the id string and get the second part (post.id)
+
+  // If editButton clicked
+  if (event.target.id.startsWith('editButtonPost_')) {
+    const editButton = event.target;
+    // Create saveButton element
+    const saveButton = buttonCreator('save', postId);
+    // Replace old editButton with the new saveButton
+    editButton.parentNode.replaceChild(saveButton, editButton);
+    // Create cancelButton element
+    const cancelButton = buttonCreator('cancel', postId);
+    // Append the cancelButton to the saveButton
+    saveButton.parentNode.append(cancelButton);
+    // Get the paragraph element
+    const paragraph = document.getElementById(`postContentParagraph_${postId}`);
+    // Create the textarea element
+    const textarea = textContainerCreator(
+      'textarea',
+      paragraph.textContent,
+      postId
+    );
+    // Replace old paragrap with the new textarea
+    paragraph.parentNode.replaceChild(textarea, paragraph);
+  }
+
+  // If saveButton clicked
+  // Performs front and back manipulation by means of fetch method (POST) and Django edit_post function
+  if (event.target.id.startsWith('saveButtonPost_')) {
+    const saveButton = event.target;
+    // Create editButton element
+    const editButton = buttonCreator('edit', postId);
+    // Replace old saveButton with the new editButton
+    saveButton.parentNode.replaceChild(editButton, saveButton);
+    // Remove cancelButton element
+    const cancelButton = document.getElementById(`cancelButtonPost_${postId}`);
+    cancelButton.remove();
+    // Get the textarea element
+    const textarea = document.getElementById(`postContentTextarea_${postId}`);
+    // Create the paragraph element
+    const paragraph = textContainerCreator('p', textarea.value, postId);
+    console.log('paragraph', paragraph);
+    // Update the post content in the database
+    postUpdaterInDataBase(textarea.value, postId);
+    // Replace old textarea with the new paragraph
+    textarea.parentNode.replaceChild(paragraph, textarea);
+  }
+
+  // If cancelButton clicked
+  if (event.target.id.startsWith('cancelButtonPost_')) {
+    // This code will execute if the clicked element's ID starts with 'cancelButtonPost_'
+    const cancelButton = event.target;
+    // Create editButton element
+    const editButton = buttonCreator('edit', postId);
+    // Replace old saveButton with the new editButton
+    const saveButton = document.getElementById(`saveButtonPost_${postId}`);
+    saveButton.parentNode.replaceChild(editButton, saveButton);
+    // Remove cancelButton element
+    cancelButton.remove();
+    // Get the textarea element
+    const textarea = document.getElementById(`postContentTextarea_${postId}`);
+    // Create the paragraph element
+    const paragraph = textContainerCreator('p', textarea.textContent, postId);
+    // Replace old textarea with the new paragraph
+    textarea.parentNode.replaceChild(paragraph, textarea);
+  }
+
+  //If like/unlike span clicked
+  // Performs front and back manipulation by means of fetch method (PUT) and Django like_unlike_post function
+  if (event.target.id.startsWith('likeIconForPost_')) {
+    const likeIcon = event.target;
     // This if statement is to tackle authentication recognition status from the new post.
     if (document.getElementById('newPostId')) {
       console.log('User is logged in');
@@ -55,17 +142,11 @@ likeIconForPost.forEach((likeIcon) => {
       } else {
         likeIcon.style.color = '#818a91';
       }
-      const likeIconId = likeIcon.id; // Get the likeIcon's id ("likeIconForPost_<post.id>")
-      const postId = likeIconId.split('_')[1]; // Split the id string and get the second part (post.id)
-      const likeCountId = `likeCountForPost_${postId}`;
-      console.log('LikeIcon clicked', likeIconId);
-      console.log('Post ID:', postId);
-      console.log('Like count:', likeCountId);
-      likeCountElement = document.getElementById(likeCountId);
 
-      const csrftoken = document.querySelector(
-        '[name=csrfmiddlewaretoken]'
-      ).value;
+      const likeCountId = `likeCountForPost_${postId}`;
+      const likeCountElement = document.getElementById(likeCountId);
+      const csrfName = '[name=csrfmiddlewaretoken]';
+      const csrftoken = document.querySelector(csrfName).value;
       fetch(`/post/${postId}/like/`, {
         method: 'PUT',
         headers: {
@@ -91,5 +172,5 @@ likeIconForPost.forEach((likeIcon) => {
     } else {
       alert('Please log in to perform this action.');
     }
-  });
+  }
 });

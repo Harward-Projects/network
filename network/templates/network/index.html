@@ -44,9 +44,11 @@
             <div class="card-body">
               <a href="{% url 'profile' user=post.author %}" class="text-decoration-none link-success">{{ post.author }}</a><br>
               {% if user.is_authenticated and user.username == post.author.username %}
-                <button id="editPost_{{ post.id }}" class="card-link">Edit</button>
+                <div id="postButtons_{{ post.id }}" class="btn-group" role="group" aria-label="Basic example">
+                  <button id="editButtonPost_{{ post.id }}" class="card-link">Edit</button>
+                </div>
               {% endif %}
-              <p class="mt-2 mb-2">
+              <p id="postContentParagraph_{{ post.id }}" class="mt-2 mb-2">
                 {{ post.content }}
               </p>
               <span class="" style="color: #818a91;">
