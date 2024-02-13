@@ -48,9 +48,7 @@
                   <button id="editButtonPost_{{ post.id }}" class="card-link">Edit</button>
                 </div>
               {% endif %}
-              <p id="postContentParagraph_{{ post.id }}" class="mt-2 mb-2">
-                {{ post.content }}
-              </p>
+              <p id="postContentParagraph_{{ post.id }}" class="mt-2 mb-2">{{ post.content }}</p>
               <span class="" style="color: #818a91;">
                 {{ post.creation_date|date:"D, d M Y H:i:s" }}
               </span><br>
