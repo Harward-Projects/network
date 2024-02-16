@@ -82,7 +82,7 @@ def index(request):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
-    num_pages_minus_one = page_obj.paginator.num_pages - 1
+    num_pages_minus_two = page_obj.paginator.num_pages - 2
 
     return render(
         request,
@@ -90,7 +90,7 @@ def index(request):
         {
             "form": form,
             "page_obj": page_obj,
-            "num_pages_minus_one": num_pages_minus_one,
+            "num_pages_minus_two": num_pages_minus_two,
         },
     )
 
