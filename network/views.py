@@ -6,6 +6,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.core.paginator import Paginator
+
+# from django.views.generic import ListView
+
 
 from .models import User, Post
 from .forms import PostForm
@@ -74,12 +78,19 @@ def index(request):
     # Order posts in reversed order based on creation_date
     posts = Post.objects.all().order_by("-creation_date")
 
+    # Employe paginator
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    num_pages_minus_one = page_obj.paginator.num_pages - 1
+
     return render(
         request,
         "network/index.html",
         {
             "form": form,
-            "posts": posts,
+            "page_obj": page_obj,
+            "num_pages_minus_one": num_pages_minus_one,
         },
     )
 
