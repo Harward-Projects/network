@@ -1,5 +1,58 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-profile of {{ theuser }}
+  <div class="card text-center mb-3">
+    <div class="card-header">
+      All Posts for {{ theuser }}<br>
+      <div>
+        {% if user.is_authenticated and user.username != theuser %}
+            {% if follow_state == None %}
+                <button type="submit" class="btn btn-primary" id="changeFollowStateButtonFollow">Follow {{ theuser }}</button>
+            {% else %}
+                <button type="submit" class="btn btn-warning" id="changeFollowStateButtonUnFollow">Unfollow {{ theuser }}</button>
+            {% endif %}
+        {% endif %}
+      </div>
+      <span>Number of followers: {{ followers_num }}</span><br>
+      <span>Number of followings: {{ following_num }} </span><br>
+    </div>
+  </div>
+
+  <div class="" style="height: 79vh; overflow-y: auto;">
+  
+    <!-- Existing Posts for the user -->
+    <div class="container card mb-3">
+      <div class="card-body">
+  
+        {% for post in page_obj %}
+          <div class="card d-flex mb-3">
+            <div class="card-body">
+              <a href="{% url 'profile' user=post.author %}" class="text-decoration-none link-success">{{ post.author }}</a><br>
+              {% if user.is_authenticated and user.username == post.author.username %}
+                <div id="postButtons_{{ post.id }}" class="btn-group" role="group" aria-label="Basic example">
+                  <button id="editButtonPost_{{ post.id }}" class="card-link">Edit</button>
+                </div>
+              {% endif %}
+              <p id="postContentParagraph_{{ post.id }}" class="mt-2 mb-2">{{ post.content }}</p>
+              <span class="" style="color: #818a91;">
+                {{ post.creation_date|date:"D, d M Y H:i:s" }}
+              </span><br>
+              {% if user in post.likes.all %}
+                <span id="likeIconForPost_{{ post.id }}" class="" style="color: red; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
+              {% else %}
+                <span id="likeIconForPost_{{ post.id }}" class="" style="color: #818a91; font-size: 2rem; text-decoration: none; cursor: pointer;">♥</span>
+              {% endif %}
+              <span id="likeCountForPost_{{ post.id }}">{{ post.like_count }}</span>
+            </div>
+          </div>
+        {% empty %}
+            <h5 class="text-center">No posts yet!<br>Be the first that starts the conversation.</h5>
+        {% endfor %}
+
+      </div>
+    </div>
+    <!-- Existing Posts' End -->
+  
+  </div>
+
 {% endblock %}

@@ -50,7 +50,54 @@
     {% block body %}
     {% endblock %}
 
+    <!-- Pages Navigation by Pagination -->
+    <div class="card-footer text-body-secondary fixed-bottom text-center">
+      Pages
+      <!-- Pagination from: https://getbootstrap.com/docs/5.3/components/pagination -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.number > 2 %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'index' %}">&laquo; First</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="{% url 'index' %}">&laquo; First</a>
+            </li>
+          {% endif %}
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'index' %}?page={{ page_obj.previous_page_number }}">&lsaquo; Previous</a>
+            </li>
+          {% endif %}
+          <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'index' %}?page={{ page_obj.next_page_number }}">Next &rsaquo;</a>
+            </li>
+          {% endif %}
+          {% if page_obj.number > num_pages_minus_two %}
+            <li class="page-item disabled">
+              <a class="page-link" href="{% url 'index' %}?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'index' %}?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+    <!-- Pages Navigation by Pagination's End -->
+
     <script src="{% static 'network/index.js' %}"></script>
+    <script>
+      var isAuthenticated = {{ user.is_authenticated|lower }};
+      const csrfToken = '{{ csrf_token }}';
+    </script>
+      
 
   </body>
 </html>

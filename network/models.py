@@ -14,6 +14,9 @@ class FollowState(models.Model):
     def __str__(self):
         return f"{self.user} is followed BY {self.followed_by}."
 
+    def follower_count(self):
+        return self.followed_by.count()
+
 
 # A post has just one author and multiple likes from different users, if any. So, M2M field and blank:True
 class Post(models.Model):

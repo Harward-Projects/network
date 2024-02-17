@@ -2,6 +2,10 @@
 //   // Use links to toggle between views
 // });
 
+// function isAuthenticated() {
+//   return document.cookie.includes('sessionid');
+// }
+
 // Function: Create the button element
 const buttonCreator = function (buttonName, postId) {
   const button = document.createElement('button');
@@ -160,9 +164,7 @@ document.addEventListener('click', (event) => {
       alert('First assign the POST UNDER EDIT!');
     } else {
       const likeIcon = event.target;
-      // This if statement is to tackle authentication recognition status from the new post.
-      if (document.getElementById('newPostId')) {
-        console.log('User is logged in');
+      if (isAuthenticated) {
         if (likeIcon.style.color != 'red') {
           likeIcon.style.color = 'red';
         } else {
@@ -171,13 +173,14 @@ document.addEventListener('click', (event) => {
 
         const likeCountId = `likeCountForPost_${postId}`;
         const likeCountElement = document.getElementById(likeCountId);
-        const csrfName = '[name=csrfmiddlewaretoken]';
-        const csrftoken = document.querySelector(csrfName).value;
+        // const csrfName = '[name=csrfmiddlewaretoken]';
+        // const csrftoken = document.querySelector(csrfName).value;
+        // csrfToken
         fetch(`/post/${postId}/like/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
+            'X-CSRFToken': csrfToken,
           },
           body: JSON.stringify({
             liked: likeIcon.style.color === 'red', // Determine liked based on the color
@@ -196,8 +199,24 @@ document.addEventListener('click', (event) => {
             console.error('Error updating post like/unlike state:', error);
           });
       } else {
+        console.log('user is authenticated?', isAuthenticated);
+
         alert('Please log in to perform this action.');
       }
     }
   }
+
+  //If follow/unfollow button clicked
+  if (event.target.id.startsWith('changeFollowStateButton')) {
+    fetch(`profile/${theuser}/follow`),
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+      };
+  }
 });
+
+// document.addEventListener('click');

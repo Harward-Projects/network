@@ -3,15 +3,18 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    JsonResponse,
+    HttpResponseNotFound,
+)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 
-# from django.views.generic import ListView
-
-
-from .models import User, Post
+from .models import User, Post, FollowState
 from .forms import PostForm
 
 
@@ -78,7 +81,7 @@ def index(request):
     # Order posts in reversed order based on creation_date
     posts = Post.objects.all().order_by("-creation_date")
 
-    # Employe paginator
+    # Employ paginator
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
@@ -95,12 +98,65 @@ def index(request):
     )
 
 
+def follow_unfollow(user, current_user):
+    try:
+        # Check if there is a FollowState entry for the given user and current_user
+        follow_state = FollowState.objects.get(user=user, followed_by=current_user)
+
+        # If the current_user is already following the user, unfollow
+        follow_state.followed_by.remove(current_user)
+        return HttpResponse("Unfollowed successfully!")
+    except FollowState.DoesNotExist:
+        # If no FollowState entry exists, create a new one (follow)
+        FollowState.objects.create(user=user, followed_by=current_user)
+        return HttpResponse("Followed successfully!")
+
+
 def profile_view(request, user):
+    try:
+        # Retrieve the user object by username
+        user_obj = User.objects.get(username=user)
+    except User.DoesNotExist:
+        # Handle the case where the user does not exist
+        return HttpResponseNotFound("User not found")
+
+    follow_state = None
+    current_user = request.user
+    try:
+        # Try to retrieve the follow state
+        follow_state = FollowState.objects.get(user=user_obj, followed_by=current_user)
+    except ObjectDoesNotExist:
+        # Handle the case where the FollowState object does not exist
+        pass
+    # follow_state = FollowState.objects.get(user=user_obj, followed_by=current_user)
+    print("follow_state:", follow_state)
+    # follow_unfollow(user, current_user)
+
+    # Calculate the number of followers for the user
+    followers_num = FollowState.objects.filter(user=user_obj).count()
+
+    # Calculate the number of users that the current user is following
+    following_num = FollowState.objects.filter(followed_by=user_obj).count()
+
+    # Order the user's posts in reversed order based on creation_date
+    posts = Post.objects.filter(author=user_obj).order_by("-creation_date")
+
+    # Employ paginator
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    num_pages_minus_two = page_obj.paginator.num_pages - 2
+
     return render(
         request,
         "network/profile.html",
         {
+            "follow_state": follow_state,
+            "followers_num": followers_num,
+            "following_num": following_num,
+            "page_obj": page_obj,
             "theuser": user,
+            "num_pages_minus_two": num_pages_minus_two,
         },
     )
 
