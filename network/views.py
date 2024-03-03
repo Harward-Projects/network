@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 
-from .models import User, Post, FollowState
+from .models import User, Post, Follow
 from .forms import PostForm
 
 
@@ -33,34 +33,6 @@ def edit_post(request, post_id):
     else:
         return JsonResponse({"error": "Invalid request method."}, status=400)
     # return redirect("index")
-
-
-@login_required
-def like_unlike_post(request, post_id):
-    user = request.user
-    post = get_object_or_404(Post, pk=post_id)
-    if request.method == "PUT":
-        data = json.loads(request.body)
-        liked_state = data.get("liked")
-        if (
-            user in post.likes.all() and not liked_state
-        ):  # double check if post was liked
-            post.likes.remove(user)
-        else:
-            post.likes.add(user)
-        post.save()
-        print(f"PUT data:", data)
-        print(f"liked:", data.get("liked"))
-
-        return JsonResponse(
-            {
-                "message": "Post like/unlike state updated successfully.",
-                "like_count": post.like_count(),
-            },
-            status=200,
-        )
-    else:
-        return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 def index(request):
@@ -98,48 +70,42 @@ def index(request):
     )
 
 
-def follow_unfollow(user, current_user):
-    try:
-        # Check if there is a FollowState entry for the given user and current_user
-        follow_state = FollowState.objects.get(user=user, followed_by=current_user)
+def profile_view(request, theuser):
+    current_user = request.user
 
-        # If the current_user is already following the user, unfollow
-        follow_state.followed_by.remove(current_user)
-        return HttpResponse("Unfollowed successfully!")
-    except FollowState.DoesNotExist:
-        # If no FollowState entry exists, create a new one (follow)
-        FollowState.objects.create(user=user, followed_by=current_user)
-        return HttpResponse("Followed successfully!")
-
-
-def profile_view(request, user):
     try:
         # Retrieve the user object by username
-        user_obj = User.objects.get(username=user)
+        theuser_obj = User.objects.get(username=theuser)
     except User.DoesNotExist:
         # Handle the case where the user does not exist
         return HttpResponseNotFound("User not found")
 
-    follow_state = None
-    current_user = request.user
-    try:
-        # Try to retrieve the follow state
-        follow_state = FollowState.objects.get(user=user_obj, followed_by=current_user)
-    except ObjectDoesNotExist:
-        # Handle the case where the FollowState object does not exist
-        pass
-    # follow_state = FollowState.objects.get(user=user_obj, followed_by=current_user)
-    print("follow_state:", follow_state)
-    # follow_unfollow(user, current_user)
+    # follow_state = "not defined"
+    if current_user.is_authenticated:
+        try:
+            followers_num = Follow.objects.filter(followed=theuser_obj).count()
+            print("THE TRY follow_state count():", followers_num)
+        except Follow.DoesNotExist:
+            followers_num = 0
+            print("except follow_state:", followers_num)
 
-    # Calculate the number of followers for the user
-    followers_num = FollowState.objects.filter(user=user_obj).count()
+    print("theuser_obj:", theuser_obj)
+    user = User.objects.get(username=theuser_obj)
+    print("user:", user)
+    print("current_user:", current_user)
 
-    # Calculate the number of users that the current user is following
-    following_num = FollowState.objects.filter(followed_by=user_obj).count()
+    follower_state = Follow.objects.all().filter(followed=theuser_obj)
+    followed_state = Follow.objects.all().filter(follower=theuser_obj)
+    print("theuser_obj.id", theuser_obj.id)
+    print("follower_state.all()", follower_state),
+    print("follow_state.followed_by.all()", followed_state)
+    followers_num = follower_state.count()
+    print("followers_num:", followers_num)
+    following_num = followed_state.count()
+    print("following_num:", following_num)
 
     # Order the user's posts in reversed order based on creation_date
-    posts = Post.objects.filter(author=user_obj).order_by("-creation_date")
+    posts = Post.objects.filter(author=theuser_obj).order_by("-creation_date")
 
     # Employ paginator
     paginator = Paginator(posts, 10)
@@ -151,14 +117,73 @@ def profile_view(request, user):
         request,
         "network/profile.html",
         {
-            "follow_state": follow_state,
+            "follow_state": followers_num,
             "followers_num": followers_num,
+            # "followers_num": followers_count,
             "following_num": following_num,
             "page_obj": page_obj,
-            "theuser": user,
+            "theuser": theuser,
             "num_pages_minus_two": num_pages_minus_two,
         },
     )
+
+
+@login_required
+def follow_unfollow(request, theuser):
+    current_user = request.user
+    theuser_obj = get_object_or_404(User, username=theuser)
+
+    if request.method == "PUT":
+        try:
+            # Check if there is a FollowState entry for the given user and current_user
+            follow_state = Follow.objects.get(
+                follower=current_user, followed=theuser_obj
+            )
+            print("theuser_follow_state before remove:", follow_state)
+
+            # If the current_user is already following the user, unfollow
+            follow_state.delete()
+            print("theuser_follow_state aftere remove:", follow_state)
+
+            return HttpResponse("Unfollowed successfully!", {})
+
+        except Follow.DoesNotExist:
+            # If no FollowState entry exists, create a new one (follow)
+            follow_state = Follow.objects.create(
+                follower=current_user, followed=theuser_obj
+            )
+            print("theuser_follow_state after create:", follow_state)
+            return HttpResponse("Followed successfully!")
+
+    return HttpResponse("Invalid request method")
+
+
+@login_required
+def like_unlike_post(request, post_id):
+    user = request.user
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        liked_state = data.get("liked")
+        if (
+            user in post.likes.all() and not liked_state
+        ):  # double check if post was liked
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+        post.save()
+        print(f"PUT data:", data)
+        print(f"liked:", data.get("liked"))
+
+        return JsonResponse(
+            {
+                "message": "Post like/unlike state updated successfully.",
+                "like_count": post.like_count(),
+            },
+            status=200,
+        )
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 def login_view(request):

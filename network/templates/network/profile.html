@@ -6,15 +6,15 @@
       All Posts for {{ theuser }}<br>
       <div>
         {% if user.is_authenticated and user.username != theuser %}
-            {% if follow_state == None %}
-                <button type="submit" class="btn btn-primary" id="changeFollowStateButtonFollow">Follow {{ theuser }}</button>
+            {% if follow_state > 0 %}
+              <button type="submit" class="btn btn-warning" id="changeFollowStateButtonUnFollow">Unfollow {{ theuser }}</button>
             {% else %}
-                <button type="submit" class="btn btn-warning" id="changeFollowStateButtonUnFollow">Unfollow {{ theuser }}</button>
+              <button type="submit" class="btn btn-primary" id="changeFollowStateButtonFollow">Follow {{ theuser }}</button>
             {% endif %}
         {% endif %}
       </div>
-      <span>Number of followers: {{ followers_num }}</span><br>
-      <span>Number of followings: {{ following_num }} </span><br>
+      <span id="followersNumSpan">Number of followers: {{ followers_num }}</span><br>
+      <span id="followingNumSpan">Number of followings: {{ following_num }} </span><br>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
         {% for post in page_obj %}
           <div class="card d-flex mb-3">
             <div class="card-body">
-              <a href="{% url 'profile' user=post.author %}" class="text-decoration-none link-success">{{ post.author }}</a><br>
+              <a href="{% url 'profile' theuser=post.author %}" class="text-decoration-none link-success">{{ post.author }}</a><br>
               {% if user.is_authenticated and user.username == post.author.username %}
                 <div id="postButtons_{{ post.id }}" class="btn-group" role="group" aria-label="Basic example">
                   <button id="editButtonPost_{{ post.id }}" class="card-link">Edit</button>
@@ -54,5 +54,10 @@
     <!-- Existing Posts' End -->
   
   </div>
+
+<script>
+  var theuser = "{{ theuser }}";
+  var followers_num = "{{ followers_num }}";
+</script>
 
 {% endblock %}

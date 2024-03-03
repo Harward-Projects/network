@@ -1,11 +1,3 @@
-// document.addEventListener('DOMContentLoaded', function () {
-//   // Use links to toggle between views
-// });
-
-// function isAuthenticated() {
-//   return document.cookie.includes('sessionid');
-// }
-
 // Function: Create the button element
 const buttonCreator = function (buttonName, postId) {
   const button = document.createElement('button');
@@ -208,15 +200,27 @@ document.addEventListener('click', (event) => {
 
   //If follow/unfollow button clicked
   if (event.target.id.startsWith('changeFollowStateButton')) {
-    fetch(`profile/${theuser}/follow`),
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken,
-        },
-      };
+    follow_unfollow_button = event.target;
+    fetch(`/profile/${theuser}/follow`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
+    });
+    if (follow_unfollow_button.className == 'btn btn-warning') {
+      follow_unfollow_button.textContent = `Follow ${theuser}`;
+      follow_unfollow_button.className = 'btn btn-primary';
+      new_followers_num = parseInt(followers_num) - 1;
+      document.getElementById('followersNumSpan').textContent =
+        'Number of followers: ' + followers_num;
+    } else {
+      follow_unfollow_button.textContent = `Unfollow ${theuser}`;
+      follow_unfollow_button.className = 'btn btn-warning';
+      new_followers_num = parseInt(followers_num) + 1;
+      document.getElementById(
+        'followersNumSpan'
+      ).textContent = `Number of followers: ${new_followers_num}`;
+    }
   }
 });
-
-// document.addEventListener('click');
