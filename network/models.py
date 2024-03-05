@@ -1,36 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
 
-# User = get_user_model()
-
-
 class User(AbstractUser):
     pass
-    # following = models.ManyToManyField(
-    #     "self", blank=True, symmetrical=False, related_name="following"
-    # )
-    # followed_by = models.ManyToManyField(
-    #     "self", blank=True, symmetrical=False, related_name="followed_by"
-    # )
 
     def __str__(self):
         return self.username
-
-
-# If a user is followed by another ones, it means that those users are following this user.
-# class FollowState(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="the_user")
-#     following = models.ManyToManyField(User, blank=True, related_name="following")
-#     followed_by = models.ManyToManyField(User, blank=True, related_name="followed_by")
-
-#     def __str__(self):
-#         return f"{self.user} is followed BY {self.followed_by.all()[:5]}."
-
-#     def follower_count(self):
-#         return self.followed_by.count()
 
 
 class Follow(models.Model):
