@@ -83,11 +83,14 @@ def profile_view(request, theuser):
     # follow_state = "not defined"
     if current_user.is_authenticated:
         try:
+            follow_obj = Follow.objects.get(follower=current_user, followed=theuser_obj)
+            follow_state = True
+            print("try follow_state:", follow_state)
             followers_num = Follow.objects.filter(followed=theuser_obj).count()
-            print("THE TRY follow_state count():", followers_num)
-        except Follow.DoesNotExist:
-            followers_num = 0
-            print("except follow_state:", followers_num)
+            print("THE TRY followers_num count():", followers_num)
+        except:
+            follow_state = False
+            print("except follow_state:", follow_state)
 
     print("theuser_obj:", theuser_obj)
     user = User.objects.get(username=theuser_obj)
@@ -117,9 +120,8 @@ def profile_view(request, theuser):
         request,
         "network/profile.html",
         {
-            "follow_state": followers_num,
+            "follow_state": follow_state,
             "followers_num": followers_num,
-            # "followers_num": followers_count,
             "following_num": following_num,
             "page_obj": page_obj,
             "theuser": theuser,
@@ -165,9 +167,8 @@ def like_unlike_post(request, post_id):
     if request.method == "PUT":
         data = json.loads(request.body)
         liked_state = data.get("liked")
-        if (
-            user in post.likes.all() and not liked_state
-        ):  # double check if post was liked
+        if user in post.likes.all() and not liked_state:
+            # liked_state double checks if post was liked (excesive)
             post.likes.remove(user)
         else:
             post.likes.add(user)

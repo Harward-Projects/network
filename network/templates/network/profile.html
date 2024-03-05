@@ -6,7 +6,7 @@
       All Posts for {{ theuser }}<br>
       <div>
         {% if user.is_authenticated and user.username != theuser %}
-            {% if follow_state > 0 %}
+            {% if follow_state %}
               <button type="submit" class="btn btn-warning" id="changeFollowStateButtonUnFollow">Unfollow {{ theuser }}</button>
             {% else %}
               <button type="submit" class="btn btn-primary" id="changeFollowStateButtonFollow">Follow {{ theuser }}</button>

@@ -1,1 +1,10 @@
 *.mkv
+network/migrations/__pycache__/0002_alter_post_content.cpython-310.pyc
+network/migrations/__pycache__/0002_follow_delete_followstate.cpython-310.pyc
+network/migrations/__pycache__/0003_post_like_count.cpython-310.pyc
+network/migrations/__pycache__/0004_remove_post_like_count.cpython-310.pyc
+network/migrations/__pycache__/0005_followstate_created_at_followstate_following_and_more.cpython-310.pyc
+network/migrations/__pycache__/0005_followstate_following.cpython-310.pyc
+network/migrations/__pycache__/0006_followstate_created_at_and_more.cpython-310.pyc
+network/__pycache__/forms.cpython-310.pyc
+network/migrations/0002_follow_delete_followstate.py
