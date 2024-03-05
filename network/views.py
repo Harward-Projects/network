@@ -70,6 +70,47 @@ def index(request):
     )
 
 
+@login_required
+def following_view(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)  # Don't save to DB
+            post.author = request.user
+            post.save()  # Now save to DB
+            form = PostForm()
+            # Redirect to the index page after form submission to prevent re-submission in refreshing page
+            return redirect("index")
+        else:
+            form = PostForm()
+    else:
+        form = PostForm()
+
+    # Gather posts from followers
+    posts = Post.objects.none()  # Initialize an empty queryset
+    followers = Follow.objects.filter(followed=request.user)
+    for follower in followers:
+        follower_posts = Post.objects.filter(author=follower.follower)
+        posts = posts.union(follower_posts)
+    followers_posts = posts.order_by("-creation_date")
+
+    # Employ paginator
+    paginator = Paginator(followers_posts, 10)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    num_pages_minus_two = page_obj.paginator.num_pages - 2
+
+    return render(
+        request,
+        "network/index.html",
+        {
+            "form": form,
+            "page_obj": page_obj,
+            "num_pages_minus_two": num_pages_minus_two,
+        },
+    )
+
+
 def profile_view(request, theuser):
     current_user = request.user
 

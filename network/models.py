@@ -31,7 +31,7 @@ class Post(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.author} posted a post."
+        return f"{self.author} posted a post in {self.creation_date}."
 
     def like_count(self):
         return self.likes.count()
