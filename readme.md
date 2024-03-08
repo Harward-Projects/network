@@ -6,10 +6,10 @@ __To perform the application (network) go to the root folder of the project in t
 
 ### ID and passwords of current DB users:
 1. username: admin
-   -password: admin
+   - password: admin
 2. username: vahid59m
-   -password: vahid59m
+   - password: vahid59m
 3. username: thirduser
-   -password: thirduser
+   - password: thirduser
 4. username: forthuser
-   -password: forthuser
+   - password: forthuser
