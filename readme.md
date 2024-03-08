@@ -1,4 +1,4 @@
-# This is the 4th project of the Harvard Online CS50W course for week 7.
+# This is the 4th project of the Harvard Online CS50W course for week 7 Testing, CI/CD.
 
 ## How to run:
 __To perform the application (network) go to the root folder of the project in the bash (or command line for windows) and run the below command:__
