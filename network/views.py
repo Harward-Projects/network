@@ -63,6 +63,7 @@ def index(request):
         request,
         "network/index.html",
         {
+            "related": "All",
             "form": form,
             "page_obj": page_obj,
             "num_pages_minus_two": num_pages_minus_two,
@@ -104,6 +105,7 @@ def following_view(request):
         request,
         "network/index.html",
         {
+            "related": "Following",
             "form": form,
             "page_obj": page_obj,
             "num_pages_minus_two": num_pages_minus_two,
