@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,8 +79,19 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
+    "test": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
+    },
 }
+
+# Specify test database usage
+if "test" in sys.argv:
+    DATABASES["default"] = DATABASES["test"]
+
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 AUTH_USER_MODEL = "network.User"
 
