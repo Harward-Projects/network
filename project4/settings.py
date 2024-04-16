@@ -79,16 +79,18 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        # "TEST_NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
     },
     "test": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
+        # "TEST": {"TEST_NAME": None},
     },
 }
 
 # Specify test database usage
-if "test" in sys.argv:
-    DATABASES["default"] = DATABASES["test"]
+# if "test" in sys.argv:
+#     DATABASES["default"] = DATABASES["test"]
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
