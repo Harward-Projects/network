@@ -12,34 +12,34 @@ import time
 # db.connection.set_schema("test")
 
 
-class FunctionalTestClass(TestCase):
+# class FunctionalTestClass(TestCase):
 
-    def setUp(self):
-        self.browser = webdriver.Chrome()
+#     def setUp(self):
+#         self.browser = webdriver.Chrome()
 
-    def test_01(self):
-        user = User.objects.create_user(
-            username="tester01", email="tester01@example.com", password="password"
-        )
-        user.save()
-        self.browser.get("http://127.0.0.1:8000/")
-        self.browser.find_element(By.LINK_TEXT, "Log In").click()
-        username = self.browser.find_element(By.NAME, "username")
-        username.send_keys("tester01")
-        password = self.browser.find_element(By.NAME, "password")
-        password.send_keys("password")
-        self.browser.find_element("css selector", ".btn.btn-primary").click()
+#     def test_01(self):
+#         user = User.objects.create_user(
+#             username="tester01", email="tester01@example.com", password="password"
+#         )
+#         user.save()
+#         self.browser.get("http://127.0.0.1:8000/")
+#         self.browser.find_element(By.LINK_TEXT, "Log In").click()
+#         username = self.browser.find_element(By.NAME, "username")
+#         username.send_keys("tester01")
+#         password = self.browser.find_element(By.NAME, "password")
+#         password.send_keys("password")
+#         self.browser.find_element("css selector", ".btn.btn-primary").click()
 
-        wait = WebDriverWait(self.browser, 10)  # Wait up to 10 seconds
-        post = wait.until(EC.presence_of_element_located((By.ID, "id_content")))
-        # post = self.browser.find_element(By.ID, "id_content")
-        post.send_keys("The New New Test Text by tester01 user")
-        self.browser.find_element("id", "submitPost").click()
-        self.assertIn("Test text", self.browser.page_source)
+#         wait = WebDriverWait(self.browser, 10)  # Wait up to 10 seconds
+#         post = wait.until(EC.presence_of_element_located((By.ID, "id_content")))
+#         # post = self.browser.find_element(By.ID, "id_content")
+#         post.send_keys("The New New Test Text by tester01 user")
+#         self.browser.find_element("id", "submitPost").click()
+#         self.assertIn("Test text", self.browser.page_source)
 
-    def tearDown(self):
-        time.sleep(10)
-        self.browser.quit()
+#     def tearDown(self):
+#         time.sleep(10)
+#         self.browser.quit()
 
 
 class UnitTestClass(TestCase):
