@@ -1,5 +1,4 @@
-Name: Test for project nomber 4
-
+name: Test for project nomber 4
 on: push
 
 jobs:
