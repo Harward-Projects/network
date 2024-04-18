@@ -1,0 +1,13 @@
+Name: Test for project nomber 4
+
+on: push
+
+jobs:
+  test_peroject:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Django unit tests
+        run: |
+          pip3 install --user django selenium
+          python3 manage.py test
