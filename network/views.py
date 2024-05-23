@@ -134,6 +134,8 @@ def profile_view(request, theuser):
         except:
             follow_state = False
             print("except follow_state:", follow_state)
+    else:
+        follow_state = None
 
     print("theuser_obj:", theuser_obj)
     user = User.objects.get(username=theuser_obj)
