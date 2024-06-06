@@ -89,10 +89,14 @@ def following_view(request):
 
     # Gather posts from followers
     posts = Post.objects.none()  # Initialize an empty queryset
-    followers = Follow.objects.filter(followed=request.user)
+    followers = Follow.objects.filter(follower=request.user)
     for follower in followers:
-        follower_posts = Post.objects.filter(author=follower.follower)
+        print(f"followers of {request.user} are:", follower.followed.username)
+    for follower in followers:
+        follower_posts = Post.objects.filter(author=follower.followed)
         posts = posts.union(follower_posts)
+        for post in posts:
+            print(post.author.username)
     followers_posts = posts.order_by("-creation_date")
 
     # Employ paginator
