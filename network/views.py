@@ -65,6 +65,8 @@ def index(request):
         {
             "related": "All",
             "form": form,
+            "current_view": "index",
+            "view_param": None,
             "page_obj": page_obj,
             "num_pages_minus_two": num_pages_minus_two,
         },
@@ -111,6 +113,8 @@ def following_view(request):
         {
             "related": "Following",
             "form": form,
+            "current_view": "following",
+            "view_param": None,
             "page_obj": page_obj,
             "num_pages_minus_two": num_pages_minus_two,
         },
@@ -172,6 +176,8 @@ def profile_view(request, theuser):
             "follow_state": follow_state,
             "followers_num": followers_num,
             "following_num": following_num,
+            "current_view": "profile",
+            "view_param": theuser,
             "page_obj": page_obj,
             "theuser": theuser,
             "num_pages_minus_two": num_pages_minus_two,
