@@ -257,10 +257,21 @@ def login_view(request):
             return render(
                 request,
                 "network/login.html",
-                {"message": "Invalid username and/or password."},
+                {
+                    "message": "Invalid username and/or password.",
+                    "current_view": "login",
+                    "view_param": None,
+                },
             )
     else:
-        return render(request, "network/login.html")
+        return render(
+            request,
+            "network/login.html",
+            {
+                "current_view": "login",
+                "view_param": None,
+            },
+        )
 
 
 def logout_view(request):
@@ -278,7 +289,13 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "network/register.html", {"message": "Passwords must match."}
+                request,
+                "network/register.html",
+                {
+                    "message": "Passwords must match.",
+                    "current_view": "register",
+                    "view_param": None,
+                },
             )
 
         # Attempt to create new user
@@ -287,9 +304,22 @@ def register(request):
             user.save()
         except IntegrityError:
             return render(
-                request, "network/register.html", {"message": "Username already taken."}
+                request,
+                "network/register.html",
+                {
+                    "message": "Username already taken.",
+                    "current_view": "register",
+                    "view_param": None,
+                },
             )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "network/register.html")
+        return render(
+            request,
+            "network/register.html",
+            {
+                "current_view": "register",
+                "view_param": None,
+            },
+        )
