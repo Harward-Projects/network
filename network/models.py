@@ -22,6 +22,15 @@ class Follow(models.Model):
     class Meta:
         unique_together = ["follower", "followed"]
 
+    # def follower_count(self):
+    #     return self.follower.count()
+
+    # def following_count(self):
+    #     return self.followed.count()
+
+    def follow_state(self):
+        return f"{self.follower.username} follows {self.followed.username}."
+
 
 # A post has just one author and multiple likes from different users, if any. So, M2M field and blank:True
 class Post(models.Model):

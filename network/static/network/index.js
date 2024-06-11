@@ -200,27 +200,43 @@ document.addEventListener('click', (event) => {
 
   //If follow/unfollow button clicked
   if (event.target.id.startsWith('changeFollowStateButton')) {
-    follow_unfollow_button = event.target;
+    followUnfollowButton = event.target;
+    if (followUnfollowButton.className == 'btn btn-warning') {
+      followUnfollowButton.textContent = `Follow ${theuser}`;
+      followUnfollowButton.className = 'btn btn-primary';
+      // newFollowersNum = parseInt(followers_num) - 1;
+      // document.getElementById('followersNumSpan').textContent =
+      //   'Number of followers: ' + newFollowersNum;
+    } else {
+      followUnfollowButton.textContent = `Unfollow ${theuser}`;
+      followUnfollowButton.className = 'btn btn-warning';
+      // newFollowersNum = parseInt(followers_num) + 1;
+      // console.log('newFollowersNum: ', newFollowersNum);
+      // document.getElementById('followersNumSpan').textContent =
+      //   'Number of followers: ' + newFollowersNum;
+    }
+
+    const followersNumElement = document.getElementById('followersNumSpan');
     fetch(`/profile/${theuser}/follow`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRFToken': csrfToken,
       },
-    });
-    if (follow_unfollow_button.className == 'btn btn-warning') {
-      follow_unfollow_button.textContent = `Follow ${theuser}`;
-      follow_unfollow_button.className = 'btn btn-primary';
-      new_followers_num = parseInt(followers_num) - 1;
-      document.getElementById('followersNumSpan').textContent =
-        'Number of followers: ' + followers_num;
-    } else {
-      follow_unfollow_button.textContent = `Unfollow ${theuser}`;
-      follow_unfollow_button.className = 'btn btn-warning';
-      new_followers_num = parseInt(followers_num) + 1;
-      document.getElementById(
-        'followersNumSpan'
-      ).textContent = `Number of followers: ${new_followers_num}`;
-    }
+      body: JSON.stringify({
+        followed: followUnfollowButton.className === 'btn btn-warning', // Determine followed based on the button calss
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to update follow state.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('followersNumText: ', data.followers_num);
+        followersNumElement.textContent =
+          'Number of followers: ' + data.followers_num;
+      });
   }
 });
